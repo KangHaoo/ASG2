@@ -1,90 +1,80 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PickUpController : MonoBehaviour
 {
-    public ProjectileGun gunScript;
-    public Rigidbody rb;
-    public BoxCollider coll;
-    public Transform player, gunContainer, fpsCam;
+    public Transform weaponHoldPoint; // Point where the weapon will be held
+    public float dropForce = 1f; // Force applied when dropping the weapon
 
-    public float pickUpRange;
-    public float dropForwardForce, dropUpwardForce;
+    private GameObject currentWeapon;
+    private Rigidbody weaponRb;
 
-    public bool equipped;
-    public static bool slotFull;
-
-    private void Start()
+    void Update()
     {
-        //Setup
-        if (!equipped)
+        // Check for pick up or drop input
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            gunScript.enabled = false;
-            rb.isKinematic = false;
-            coll.isTrigger = false;
-        }
-        if (equipped)
-        {
-            gunScript.enabled = true;
-            rb.isKinematic = true;
-            coll.isTrigger = true;
-            slotFull = true;
+            if (currentWeapon == null)
+            {
+                TryPickUpWeapon();
+            }
+            else
+            {
+                DropWeapon();
+            }
         }
     }
 
-    private void Update()
+    void TryPickUpWeapon()
     {
-        //Check if player is in range and "E" is pressed
-        Vector3 distanceToPlayer = player.position - transform.position;
-        if (!equipped && distanceToPlayer.magnitude <= pickUpRange && Input.GetKeyDown(KeyCode.E) && !slotFull) PickUp();
+        RaycastHit hit;
+        // Raycast to detect weapons within 2 meters in front of the player
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 2f))
+        {
+            // Check if the hit object is tagged as "Weapon"
+            if (hit.collider.CompareTag("Weapon"))
+            {
+                currentWeapon = hit.collider.gameObject;
+                weaponRb = currentWeapon.GetComponent<Rigidbody>();
+                if (weaponRb != null)
+                {
+                    // Disable weapon physics
+                    weaponRb.isKinematic = true;
+                    // Parent weapon to the hold point
+                    currentWeapon.transform.SetParent(weaponHoldPoint);
 
-        //Drop if equipped and "Q" is pressed
-        if (equipped && Input.GetKeyDown(KeyCode.Q)) Drop();
+                    // Reset weapon's local position and rotation
+                    currentWeapon.transform.localPosition = Vector3.zero;
+                    currentWeapon.transform.localRotation = Quaternion.identity;
+
+                    // Enable the gun's shooting script
+                    currentWeapon.GetComponent<ProjectileGun>().enabled = true;
+
+                    // Debug messages to check the weapon's position and rotation
+                    Debug.Log("Weapon picked up and parented to weaponHoldPoint");
+                    Debug.Log("Weapon local position: " + currentWeapon.transform.localPosition);
+                    Debug.Log("Weapon local rotation: " + currentWeapon.transform.localRotation);
+                }
+            }
+        }
     }
 
-    private void PickUp()
+    void DropWeapon()
     {
-        equipped = true;
-        slotFull = true;
+        if (currentWeapon != null)
+        {
+            // Unparent the weapon
+            currentWeapon.transform.SetParent(null);
+            // Enable weapon physics
+            weaponRb.isKinematic = false;
+            // Apply a slight force to drop the weapon
+            weaponRb.AddForce(transform.forward * dropForce, ForceMode.VelocityChange);
 
-        //Make weapon a child of the camera and move it to default position
-        transform.SetParent(gunContainer);
-        transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.Euler(Vector3.zero);
-        transform.localScale = Vector3.one;
+            // Disable the gun's shooting script
+            currentWeapon.GetComponent<ProjectileGun>().enabled = false;
 
-        //Make Rigidbody kinematic and BoxCollider a trigger
-        rb.isKinematic = true;
-        coll.isTrigger = true;
-
-        //Enable script
-        gunScript.enabled = true;
-    }
-
-    private void Drop()
-    {
-        equipped = false;
-        slotFull = false;
-
-        //Set parent to null
-        transform.SetParent(null);
-
-        //Make Rigidbody not kinematic and BoxCollider normal
-        rb.isKinematic = false;
-        coll.isTrigger = false;
-
-        //Gun carries momentum of player
-        rb.velocity = player.GetComponent<Rigidbody>().velocity;
-
-        //AddForce
-        rb.AddForce(fpsCam.forward * dropForwardForce, ForceMode.Impulse);
-        rb.AddForce(fpsCam.up * dropUpwardForce, ForceMode.Impulse);
-        //Add random rotation
-        float random = Random.Range(-1f, 1f);
-        rb.AddTorque(new Vector3(random, random, random) * 10);
-
-        //Disable script
-        gunScript.enabled = false;
+            // Clear references
+            currentWeapon = null;
+            weaponRb = null;
+        }
     }
 }

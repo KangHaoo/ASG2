@@ -1,55 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    private float health;
-    private float IerpTimer;
+    public Slider healthSlider;
+    public Slider easeHealthSlider;
     public float maxHealth = 100f;
-    public float chipSpeed = 2f;
-    //public ImageConversion FrontHealthBar;
+    public float health;
+    private float lerpSpeed = 0.05f;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         health = maxHealth;
-
+        healthSlider.value = health;
+        easeHealthSlider.value = health;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        ///health - Mathf.Clamp(health, 0, maxHealth);
-        UpdateHealthUI();
-        if (Input.GetKeyDown(KeyCode.A))
+        if (healthSlider.value != health)
         {
-            TakeDamage(Random.Range(5, 10));
+            healthSlider.value = health;
         }
 
-    }
-    public void UpdateHealthUI()
-    {
-        Debug.Log(health);
-        //float fiilF = FrontHealthBar.fillAmount;
-        //float fillB = backHealthBar.fillAmount;
-        float hFraction = health / maxHealth;
-
-        ///if(fillB > hFraction)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            //FrontHealthBar.fillAmount = hFraction;
-           // backHealthBar.color = Color.red;
-            IerpTimer += Time.deltaTime;
-           // float percentComplete = IerpTimer / chipSpeed)
+            takeDamage(10);
         }
 
+        if (easeHealthSlider.value != healthSlider.value)
+        {
+            easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, health, lerpSpeed);
+        }
 
+        if (health <= 0) 
+        {
+            Destroy(gameObject);
+        }
     }
 
-    public void TakeDamage(float damage)
+    void takeDamage(float damage)
     {
         health -= damage;
-
+        if (health < 0) health = 0;
     }
 }
