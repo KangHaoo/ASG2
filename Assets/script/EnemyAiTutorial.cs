@@ -8,8 +8,8 @@ public class EnemyAiTutorial : MonoBehaviour
     public NavMeshAgent agent;
     public Transform player;
     public LayerMask whatIsGround, whatIsPlayer;
-    public float maxHealth = 100f;  // Set the maximum health
-    private float health;
+    public float aiMaxHealth = 100f;  // Set the maximum health
+    private float aiHealth;
     public healthBar healthBar;  // Reference to the health bar UI
 
     // Patroling
@@ -34,10 +34,10 @@ public class EnemyAiTutorial : MonoBehaviour
 
     private void Start()
     {
-        health = maxHealth;
+        aiHealth = aiMaxHealth;
         if (healthBar != null)
         {
-            healthBar.SetMaxHealth(maxHealth);
+            healthBar.SetMaxHealth(aiMaxHealth);
         }
     }
 
@@ -111,13 +111,13 @@ public class EnemyAiTutorial : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        health -= damage;
+        aiHealth -= damage;
         if (healthBar != null)
         {
-            healthBar.SetHealth(health);
+            healthBar.SetHealth(aiHealth);
         }
 
-        if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
+        if (aiHealth <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
     }
 
     private void DestroyEnemy()

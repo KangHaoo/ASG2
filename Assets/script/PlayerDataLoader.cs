@@ -18,3 +18,6 @@ public class PlayerDataLoader : MonoBehaviour
         }
     }
 }
+
+// PlayerPrefs is useful for storing simple data, but for more complex data or larger amounts of data,
+// consider using other methods like serialization, databases, or Unity's JsonUtility for saving to files.

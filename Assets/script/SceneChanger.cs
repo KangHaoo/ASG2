@@ -18,6 +18,7 @@ public class SceneChanger : MonoBehaviour
 
     void SavePlayerData(Transform playerTransform)
     {
+        //Help to save player location within the map/ scene
         PlayerPrefs.SetFloat("PlayerX", playerTransform.position.x);
         PlayerPrefs.SetFloat("PlayerY", playerTransform.position.y);
         PlayerPrefs.SetFloat("PlayerZ", playerTransform.position.z);
@@ -30,3 +31,5 @@ public class SceneChanger : MonoBehaviour
         SceneManager.LoadScene(targetScene);
     }
 }
+//PlayerPrefs is useful for storing simple data, but for more complex data or larger amounts of data,
+//consider using other methods like serialization, databases, or Unity's JsonUtility for saving to files.
