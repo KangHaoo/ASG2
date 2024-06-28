@@ -6,16 +6,20 @@ TagManager:
   tags:
   - ground
   - Weapon
+  - Fire
+  - Enemy
+  - Bullet
+  - PlayerHealth
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Bullet
   - Water
   - UI
   - Player
   - ground
-  - 
+  - Enemy
   - 
   - 
   - 

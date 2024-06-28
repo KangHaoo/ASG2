@@ -10,43 +10,52 @@ public class PickUpController : MonoBehaviour
     private GameObject currentWeapon;
     private Rigidbody weaponRb;
 
-    void OnTriggerEnter(Collider other)
+    void Update()
     {
-        // Check if the collided object is tagged as "Weapon"
-        if (other.CompareTag("Weapon"))
+        // Check for pick up or drop input
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            currentWeapon = other.gameObject;
-            weaponRb = currentWeapon.GetComponent<Rigidbody>();
-            if (weaponRb != null)
+            if (currentWeapon == null)
             {
-                // Disable weapon physics
-                weaponRb.isKinematic = true;
-                // Parent weapon to the hold point
-                currentWeapon.transform.SetParent(weaponHoldPoint);
-
-                // Reset weapon's local position and rotation
-                currentWeapon.transform.localPosition = Vector3.zero;
-                currentWeapon.transform.localRotation = Quaternion.identity;
-
-                // Enable the gun's shooting script
-                currentWeapon.GetComponent<ProjectileGun>().enabled = true;
-
-                // Debug messages to check the weapon's position and rotation
-                Debug.Log("Weapon picked up and parented to weaponHoldPoint");
-                Debug.Log("Weapon local position: " + currentWeapon.transform.localPosition);
-                Debug.Log("Weapon local rotation: " + currentWeapon.transform.localRotation);
+                TryPickUpWeapon();
+            }
+            else
+            {
+                DropWeapon();
             }
         }
     }
 
-    void Update()
+    void TryPickUpWeapon()
     {
-        // Check for drop input
-        if (Input.GetKeyDown(KeyCode.E))
+        RaycastHit hit;
+        // Raycast to detect weapons within 2 meters in front of the player
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 5f))
         {
-            if (currentWeapon != null)
+            // Check if the hit object is tagged as "Weapon"
+            if (hit.collider.CompareTag("Weapon"))
             {
-                DropWeapon();
+                currentWeapon = hit.collider.gameObject;
+                weaponRb = currentWeapon.GetComponent<Rigidbody>();
+                if (weaponRb != null)
+                {
+                    // Disable weapon physics
+                    weaponRb.isKinematic = true;
+                    // Parent weapon to the hold point
+                    currentWeapon.transform.SetParent(weaponHoldPoint);
+
+                    // Reset weapon's local position and rotation
+                    currentWeapon.transform.localPosition = Vector3.zero;
+                    currentWeapon.transform.localRotation = Quaternion.identity;
+
+                    // Enable the gun's shooting script
+                    currentWeapon.GetComponent<ProjectileGun>().enabled = true;
+
+                    // Debug messages to check the weapon's position and rotation
+                    Debug.Log("Weapon picked up and parented to weaponHoldPoint");
+                    Debug.Log("Weapon local position: " + currentWeapon.transform.localPosition);
+                    Debug.Log("Weapon local rotation: " + currentWeapon.transform.localRotation);
+                }
             }
         }
     }

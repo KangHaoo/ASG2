@@ -25,25 +25,32 @@ public class PlayerHealth : MonoBehaviour
             healthSlider.value = health;
         }
 
-       if (Input.GetKeyDown(KeyCode.Space))
-        {
-            takeDamage(10);
-        }
-
         if (easeHealthSlider.value != healthSlider.value)
         {
             easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, health, lerpSpeed);
         }
 
-        if (health <= 0) 
+        if (health <= 0)
         {
-            Destroy(gameObject);
+            Destroy(gameObject); // Destroy the player object when health reaches zero
         }
     }
 
-    void takeDamage(float damage)
+    public void takeDamage(float damage)
     {
         health -= damage;
-        if (health < 0) health = 0;
+        Debug.Log("Player took damage: " + damage + ", current health: " + health);
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+            Debug.Log("Player destroyed");
+        }
+    }
+    public void Heal(float healAmount)
+    {
+        health += healAmount;
+        health = Mathf.Min(health, maxHealth); //ensure that the health dont exceed maxhealth
+
+
     }
 }
