@@ -6,21 +6,27 @@ using UnityEngine.SceneManagement;
 public class SceneChanger : MonoBehaviour
 {
     public int targetScene;
+    public Animator animator;
 
-    public void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            ChangeScene();
+            Debug.Log("Player entered trigger");
+            FadeToLevel(targetScene);
         }
     }
 
-    void ChangeScene()
+    public void FadeToLevel(int levelIndex)
     {
+        Debug.Log("Fade to level: " + levelIndex);
+        targetScene = levelIndex;
+        animator.SetTrigger("FadeOut");
+    }
+
+    public void OnFadeComplete()
+    {
+        Debug.Log("Fade complete, loading scene: " + targetScene);
         SceneManager.LoadScene(targetScene);
     }
 }
-
-
-//PlayerPrefs is useful for storing simple data, but for more complex data or larger amounts of data,
-//consider using other methods like serialization, databases, or Unity's JsonUtility for saving to files.

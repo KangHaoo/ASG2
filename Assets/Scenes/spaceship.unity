@@ -10700,6 +10700,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4459254677479860520, guid: f475e4f14d6c74ba1b41c24727fb6ae9,
+        type: 3}
+      propertyPath: levelToLoad
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5496203027531902444, guid: f475e4f14d6c74ba1b41c24727fb6ae9,
         type: 3}
       propertyPath: m_Name
@@ -21424,6 +21429,7 @@ GameObject:
   - component: {fileID: 1290094521}
   - component: {fileID: 1290094520}
   - component: {fileID: 1290094519}
+  - component: {fileID: 1290094522}
   m_Layer: 0
   m_Name: next scene
   m_TagString: Untagged
@@ -21444,6 +21450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetScene: 2
+  animator: {fileID: 1290094522}
 --- !u!65 &1290094520
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21463,8 +21470,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 11.69611, z: 8.766205}
-  m_Center: {x: 0, y: -1.4922352, z: 10.406052}
+  m_Size: {x: 1.8928308, y: 11.69611, z: 8.766202}
+  m_Center: {x: -0.4464158, y: -1.4922352, z: 10.406051}
 --- !u!4 &1290094521
 Transform:
   m_ObjectHideFlags: 0
@@ -21474,12 +21481,33 @@ Transform:
   m_GameObject: {fileID: 1290094518}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -534.21, y: 47.95, z: -329.11}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -534.96, y: 48.135, z: -330.4}
+  m_LocalScale: {x: 1.1237, y: 1.1237, z: 1.1237}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1290094522
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1290094518}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4d2b465990dd143b2aad731ebd251cb5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1352076183
 GameObject:
   m_ObjectHideFlags: 0
@@ -31681,6 +31709,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetScene: 2
+  animator: {fileID: 0}
 --- !u!65 &1546153763
 BoxCollider:
   m_ObjectHideFlags: 0
