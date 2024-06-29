@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class ShowOptionsMenu : MonoBehaviour
 {
     public GameObject optionsMenu; // Assign the options panel in the Inspector
@@ -12,8 +11,18 @@ public class ShowOptionsMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            optionsMenu.SetActive(!optionsMenu.activeSelf);
+            if (optionsMenu.activeSelf)
+            {
+                // Resume the game
+                Time.timeScale = 1f;
+                optionsMenu.SetActive(false);
+            }
+            else
+            {
+                // Pause the game
+                Time.timeScale = 0f;
+                optionsMenu.SetActive(true);
+            }
         }
     }
 }
-

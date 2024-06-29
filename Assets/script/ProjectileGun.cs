@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class ProjectileGun : MonoBehaviour
 {
-   
     //bullet 
     public GameObject bullet;
 
@@ -34,6 +33,10 @@ public class ProjectileGun : MonoBehaviour
     public GameObject muzzleFlash;
     public TextMeshProUGUI ammunitionDisplay;
 
+    //Audio
+    public AudioSource shootingAudio;
+    public AudioClip gunshotSound;
+
     //bug fixing :D
     public bool allowInvoke = true;
 
@@ -52,6 +55,7 @@ public class ProjectileGun : MonoBehaviour
         if (ammunitionDisplay != null)
             ammunitionDisplay.SetText(bulletsLeft / bulletsPerTap + " / " + magazineSize / bulletsPerTap);
     }
+
     private void MyInput()
     {
         //Check if allowed to hold down button and take corresponding input
@@ -76,6 +80,12 @@ public class ProjectileGun : MonoBehaviour
     private void Shoot()
     {
         readyToShoot = false;
+
+        // Play gunshot audio
+        if (shootingAudio != null && gunshotSound != null)
+        {
+            shootingAudio.PlayOneShot(gunshotSound);
+        }
 
         //Find the exact hit position using a raycast
         Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); //Just a ray through the middle of your current view
@@ -119,15 +129,13 @@ public class ProjectileGun : MonoBehaviour
         {
             Invoke("ResetShot", timeBetweenShooting);
             allowInvoke = false;
-
-            //Add recoil to player (should only be called once)
-            //playerRb.AddForce(-directionWithSpread.normalized * recoilForce, ForceMode.Impulse);
         }
 
         //if more than one bulletsPerTap make sure to repeat shoot function
         if (bulletsShot < bulletsPerTap && bulletsLeft > 0)
             Invoke("Shoot", timeBetweenShots);
     }
+
     private void ResetShot()
     {
         //Allow shooting and invoking again
@@ -140,6 +148,7 @@ public class ProjectileGun : MonoBehaviour
         reloading = true;
         Invoke("ReloadFinished", reloadTime); //Invoke ReloadFinished function with your reloadTime as delay
     }
+
     private void ReloadFinished()
     {
         //Fill magazine

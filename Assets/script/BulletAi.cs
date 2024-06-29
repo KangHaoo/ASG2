@@ -28,7 +28,7 @@ public class BulletAI : MonoBehaviour
             if (health != null)
             {
                 // Call the takeDamage method of PlayerHealth
-                health.takeDamage(damage);
+                health.TakeDamage(damage);
 
                 // Debug message to confirm damage was applied
                 Debug.Log("Bullet hit player, applied damage: " + damage);

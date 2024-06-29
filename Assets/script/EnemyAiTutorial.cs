@@ -6,13 +6,13 @@ using UnityEngine.AI;
 public class EnemyAiTutorial : MonoBehaviour
 {
     public NavMeshAgent agent;
-    public Transform player;
+    private Transform player;
     public LayerMask whatIsGround, whatIsPlayer;
-    public float aiMaxHealth = 100f;  // Set the maximum health
+    public float aiMaxHealth = 100f;
     private float aiHealth;
-    public healthBar healthBar;  // Reference to the health bar UI
+    public healthBar healthBar;
 
-    // Patroling
+    // Patrolling
     public Vector3 walkPoint;
     bool walkPointSet;
     public float walkPointRange;
@@ -28,7 +28,7 @@ public class EnemyAiTutorial : MonoBehaviour
 
     private void Awake()
     {
-        player = GameObject.Find("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = GetComponent<NavMeshAgent>();
     }
 
@@ -43,7 +43,12 @@ public class EnemyAiTutorial : MonoBehaviour
 
     private void Update()
     {
-        // Check for sight and attack range
+        // Re-assign player reference in case of scene change
+        if (player == null)
+        {
+            player = GameObject.FindGameObjectWithTag("Player").transform;
+        }
+
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
@@ -61,14 +66,12 @@ public class EnemyAiTutorial : MonoBehaviour
 
         Vector3 distanceToWalkPoint = transform.position - walkPoint;
 
-        // Walkpoint reached
         if (distanceToWalkPoint.magnitude < 1f)
             walkPointSet = false;
     }
 
     private void SearchWalkPoint()
     {
-        // Calculate random point in range
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
         float randomX = Random.Range(-walkPointRange, walkPointRange);
 
@@ -85,19 +88,22 @@ public class EnemyAiTutorial : MonoBehaviour
 
     private void AttackPlayer()
     {
-        // Make sure enemy doesn't move
         agent.SetDestination(transform.position);
 
-        transform.LookAt(player);
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 
         if (!alreadyAttacked)
         {
-            // Attack code here
-            Rigidbody rb = Instantiate(projectile, transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+            Vector3 projectileSpawnPosition = transform.position + directionToPlayer;
 
-            rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
-            rb.AddForce(transform.up * 8f, ForceMode.Impulse);
-            // End of attack code
+            GameObject spawnedProjectile = Instantiate(projectile, projectileSpawnPosition, Quaternion.identity);
+            Rigidbody rb = spawnedProjectile.GetComponent<Rigidbody>();
+
+            Vector3 forceDirection = (player.position - spawnedProjectile.transform.position).normalized;
+            rb.AddForce(forceDirection * 32f, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * 8f, ForceMode.Impulse);
 
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
