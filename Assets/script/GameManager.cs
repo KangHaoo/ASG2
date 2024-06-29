@@ -6,13 +6,13 @@ using UnityEngine.Audio;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public float playerHealth = 100f; // Default health value if not saved
-    public string currentWeaponName; // Name of the current weapon
-    public float audioVolume = 0.75f; // Default volume
-    public int qualityLevel = 2; // Default quality level
-    public bool isFullscreen = true; // Default fullscreen state
+    public float playerHealth = 100f;
+    public string currentWeaponName;
+    public float audioVolume = 0.75f;
+    public int qualityLevel = 2;
+    public bool isFullscreen = true;
 
-    private bool objectiveItemPickedUp = false; // Track if the objective item is picked up
+    private bool objectiveItemPickedUp = false;
 
     void Awake()
     {

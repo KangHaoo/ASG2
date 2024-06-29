@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement; 
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -55,6 +56,8 @@ public class PlayerHealth : MonoBehaviour
 
         if (health <= 0)
         {
+            SceneManager.LoadScene(4);
+
             // Implement your logic for player death or reset
         }
     }
@@ -67,7 +70,8 @@ public class PlayerHealth : MonoBehaviour
 
         if (health <= 0)
         {
-            // Implement your logic for player death or reset
+            Destroy(gameObject);
+            SceneManager.LoadScene(4);
         }
 
         // Save health only if it has changed
