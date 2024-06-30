@@ -1,6 +1,13 @@
+/// <author>Kang Hao</author>
+/// <date>2024-06-27</date>
+/// <summary>
+/// Controls the picking up and dropping of weapons by the player.
+/// </summary>
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class PickUpController : MonoBehaviour
 {
@@ -40,10 +47,13 @@ public class PickUpController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Attempts to pick up a weapon if one is detected within range.
+    /// </summary>
     void TryPickUpWeapon()
     {
         RaycastHit hit;
-        // Raycast to detect weapons within 2 meters in front of the player
+        // Raycast to detect weapons within 5 meters in front of the player
         if (Physics.Raycast(transform.position, transform.forward, out hit, 5f))
         {
             // Check if the hit object is tagged as "Weapon"
@@ -77,6 +87,9 @@ public class PickUpController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Drops the currently held weapon.
+    /// </summary>
     void DropWeapon()
     {
         if (currentWeapon != null)
@@ -91,7 +104,7 @@ public class PickUpController : MonoBehaviour
             // Disable the gun's shooting script
             currentWeapon.GetComponent<ProjectileGun>().enabled = false;
 
-            // Save weapon state
+            // Save weapon state (empty string indicates no weapon)
             GameManager.instance.SaveWeaponState("");
 
             // Clear references
@@ -100,6 +113,10 @@ public class PickUpController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Picks up a weapon that was saved from a previous session.
+    /// </summary>
+    /// <param name="savedWeapon">The GameObject of the saved weapon.</param>
     void PickUpSavedWeapon(GameObject savedWeapon)
     {
         currentWeapon = savedWeapon;

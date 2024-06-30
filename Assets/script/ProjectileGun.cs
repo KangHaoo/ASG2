@@ -1,3 +1,9 @@
+/// <author>Kang Hao</author>
+/// <date>2024-06-25</date>
+/// <summary>
+/// Controls the shooting mechanics of a projectile gun, including shooting, reloading, and ammunition management.
+/// </summary>
+
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;

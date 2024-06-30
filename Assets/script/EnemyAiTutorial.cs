@@ -1,15 +1,59 @@
+/// <author>Kang Hao</author>
+/// <date>2024-06-26</date>
+/// <summary>
+/// Controls the behavior of an enemy AI, including patrolling, chasing, and attacking the player.
+/// </summary>
+
+
+/// <remarks>
+/// Attach this script to an enemy GameObject with a NavMeshAgent component.
+/// Requires a healthBar component to display and manage AI health.
+/// </remarks>
+/// <example>
+/// Attach this script to an enemy GameObject. Set the player tag in the Unity editor.
+/// Adjust sight and attack ranges, patrol behavior, and attack settings as needed.
+/// </example>
+
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
+
+
 public class EnemyAiTutorial : MonoBehaviour
 {
+    /// <summary>
+    /// The NavMeshAgent component for navigation.
+    /// </summary>
     public NavMeshAgent agent;
+
+    /// <summary>
+    /// Reference to the player's transform.
+    /// </summary>
     private Transform player;
+
+    /// <summary>
+    /// Layers to consider for ground and player detection.
+    /// </summary>
     public LayerMask whatIsGround, whatIsPlayer;
+
+    /// <summary>
+    /// Maximum health of the AI.
+    /// </summary>
     public float aiMaxHealth = 100f;
+
+    /// <summary>
+    /// Current health of the AI.
+    /// </summary>
     private float aiHealth;
+
+    /// <summary>
+    /// Reference to the healthBar UI component for displaying AI health.
+    /// </summary>
     public healthBar healthBar;
 
     // Patrolling
@@ -115,6 +159,11 @@ public class EnemyAiTutorial : MonoBehaviour
         alreadyAttacked = false;
     }
 
+    /// <summary>
+    /// Reduces AI health when taking damage and updates the healthBar if available.
+    /// Destroys the enemy when health reaches zero.
+    /// </summary>
+    /// <param name="damage">Amount of damage to apply.</param>
     public void TakeDamage(int damage)
     {
         aiHealth -= damage;
@@ -126,6 +175,9 @@ public class EnemyAiTutorial : MonoBehaviour
         if (aiHealth <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
     }
 
+    /// <summary>
+    /// Destroys the enemy GameObject.
+    /// </summary>
     private void DestroyEnemy()
     {
         Destroy(gameObject);
